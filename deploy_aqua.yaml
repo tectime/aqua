@@ -454,13 +454,13 @@ spec:
           httpGet:
             path: /
             port: 8080
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /
             port: 8080
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         ports:
         - containerPort: 8080
@@ -557,12 +557,12 @@ spec:
           httpGet:
             path: /
             port: 8082
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         readinessProbe:
           tcpSocket:
             port: 8443
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         ports:
         - containerPort: 3622
@@ -753,12 +753,12 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 200
+            initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 200
+            initialDelaySeconds: 60
             periodSeconds: 30
           ports:
             - containerPort: 8443
@@ -832,13 +832,13 @@ spec:
           httpGet:
             path: /healthz
             port: 8096
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /readinessz
             port: 8096
-          initialDelaySeconds: 200
+          initialDelaySeconds: 60
           periodSeconds: 30
         ports:
         - containerPort: 8096
