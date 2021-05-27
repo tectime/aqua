@@ -1,5 +1,20 @@
 apiVersion: v1
 data:
+  ## Aqua admin password
+  ADMIN_PASSWORD: 9AIqF71v1aZz5MZVmmTB
+  #LICENSE_TOKEN: ## Input Needed ##
+kind: Secret
+metadata:
+  annotations:
+    description: Aqua administrator password and License tokens
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-csp-server-secret
+  namespace: aqua
+type: Opaque
+---
+apiVersion: v1
+data:
   ### Aqua database password. Defaults to "password". Please change the same if needed.
   password: password
 kind: Secret
