@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   ## Aqua admin password
   ADMIN_PASSWORD: "Tec1time!@2"
-  #LICENSE_TOKEN: ${token_client}
+  #LICENSE_TOKEN:
 kind: Secret
 metadata:
   annotations:
