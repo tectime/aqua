@@ -1,23 +1,7 @@
 apiVersion: v1
 data:
-  ## Aqua admin password
-  ADMIN_PASSWORD: "VGVjMXRpbWUhQDIK"
-  #LICENSE_TOKEN: "OHVLS3ZMSVV5Q0hiYTAtZC1wR193eEttN3hkLWduTEZnM0lIX1VzTEp6Tl9ZaGhYdTgwaGRXaEZiOWpkMWZaaXl6SjNFTGdDTWZWaUY4T3pNZWlEa0tmQ2lxV0J6NUFzbTBfdDd0TXlrOC1hVFE1RWN6b05qYjFjS25mbmI3ZWxiR0x5T3lqNXNSWWRYc1M2T0ZyWFl4OHRobWNMZldOUjJNRUp6dXd6MDlxY0FkMFZ0SDByb0xaNDN0ZTVrY1ZMOHMyVnhPZDdOMFYtdDJtZUdjM0pXRTlqc3BYQVp1TnRfMXFZVUhvdnYwY3VxNGVpbUZJNTZYY01aZi1tMWwxTF9HeXdVT0liOUs2ZTRkb0VRVi1Eb2R6UUVVQnFBQV95ekVWQ3paeWZZdVpzbjR0aGdnUUx1V1VtUmdaNlN1UXZaVF8yX2QtYl8zMzJDaExXdjV6cDVWZDhlLXE1TFlnV3FmZGNVSWZkSzlxOENYZ1VkWVEyeEE4QUFIUlNXLTVzUkVyemVBcU00aW5ZODV5VWFham90elBkUFdsUk5SOG1LTjFwSXg5VkFqZXZOQVVLbGt5cU44cnFoZTE3T2NZNXBHeE51cGJOVDd5UAo="
-  LICENSE_TOKEN: 8uKKvLIUyCHba0-d-pG_wxKm7xd-gnLFg3IH_UsLJzN_YhhXu80hdWhFb9jd1fZiyzJ3ELgCMfViF8OzMeiDkKfCiqWBz5Asm0_t7tMyk8-aTQ5EczoNjb1cKnfnb7elbGLyOyj5sRYdXsS6OFrXYx8thmcLfWNR2MEJzuwz09qcAd0VtH0roLZ43te5kcVL8s2VxOd7N0V-t2meGc3JWE9jspXAZuNt_1qYUHovv0cuq4eimFI56XcMZf-m1l1L_GywUOIb9K6e4doEQV-DodzQEUBqAA_yzEVCzZyfYuZsn4thggQLuWUmRgZ6SuQvZT_2_d-b_332ChLWv5zp5Vd8e-q5LYgWqfdcUIfdK9q8CXgUdYQ2xA8AAHRSW-5sRErzeAqM4inY85yUaajotzPdPWlRNR8mKN1pIx9VAjevNAUKlkyqN8rqhe17OcY5pGxNupbNT7yP
-kind: Secret
-metadata:
-  annotations:
-    description: Aqua administrator password and License tokens
-  labels:
-    deployedby: aqua-yaml
-  name: aqua-csp-server-secret
-  namespace: aqua
-type: Opaque
----
-apiVersion: v1
-data:
   ### Aqua database password. Defaults to "password". Please change the same if needed.
-  password: password
+  password: cGFzc3dvcmQK
 kind: Secret
 metadata:
   annotations:
@@ -31,7 +15,7 @@ type: Opaque
 apiVersion: v1
 data:
   ### Aqua database password. Defaults to "password". Please change the same if needed.
-  password: password
+  password: cGFzc3dvcmQK
 kind: Secret
 metadata:
   annotations:
@@ -276,7 +260,7 @@ spec:
     - port: 5432
   selector:
     app: aqua-audit-db
-  type: ClusterIP
+  type: ClusterIP 
 ---
 apiVersion: v1
 kind: Service
@@ -317,7 +301,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:6.0
+        image: registry.aquasec.com/database:5.3
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -402,7 +386,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0
+        image: registry.aquasec.com/console:5.3
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -424,8 +408,8 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-server-config
-        - secretRef:
-            name: aqua-csp-server-secret
+        # - secretRef:
+        #     name: aqua-csp-server-secret
         env:
         - name: AQUA_PUBSUB_DBPASSWORD
           valueFrom:
@@ -505,7 +489,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0
+        image: registry.aquasec.com/gateway:5.3
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -555,9 +539,9 @@ spec:
 ---
 apiVersion: v1
 data:
- # Please follow instruction in document to generate new SSL certs
- server.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBMDhoUHNNUUtoMk1nZVBYd0dLc3BtS1RHOGdyamJFZFdPclRUUUc3RlRPamR0dU1tCllIbk1EbVB5aUpWK2IzRkpYOTBRZkR1WEY0d0RrZXl1Tk02OC91QUpEMEp3NjJXMnFYRXFmTEVtVVd6aHJsalkKSW1jWE9RWG4wMFdoYW9VSGI0ZDNOQ3c4azZ3YU5wZnhBQTNBU2EzeDRlbUV0SUpjL3VQMlBJbkc3WThCOTVtRworSDhRTUI0blkyNW1mQ2RMOE5YS1VINW4rMCt1SHV4NkJPQlBxNnFSMVBQNjFLbXdQaGh1aTFyZVlsRVhTRHMrCkNRU29tbHNaa0tQaEN2ay9ZZTljTTFGZXViQmlxQzczc0pianNGY0k5T3VkMDFhOVF5VUZNTVE4Ly9va3hoemkKR2RQWVNPcy9BZVRLUExjY2tRMkF5QVlCYmFFZDR0UVp0RG1DTlFJREFRQUJBb0lCQVFDbHZLVmcySXJFMlRhWQpjeCtxcm9pbkJJME03cWg4SEhmSENhd3BTSWJ2WVczaHFuSm1IZXNyZDl4ZU4xL3pKdDBkUUl1ZUxhUllzU0k2CkdOZGNURTVyeURoTzBOZzk0Q1BMQnQwUktER3NsMkVtYUREOCsyQ1pKNTM5SVFqcHE2SGVEazJqYnRzWlZoNU4KaXlyM3Q4czczZnpscHpKTGNab0ZmN0U4UHphR3dXOGw2Q2MyTzkxeUZsTEhwcHR5bzlzWngxVHoyTXZIZ0ZZdApDQmIxdHdkdjB3a2tFNXlwTXdKSU9tMzk0RkpZL2d4dytIdDRDR2IvcHhLVnVTRFZBWHl3T0J1VDZMUVJpSDFOCkcyU3J4THhRbjRPWnBhQ2RHL3NGUjZlVzlKbmVlUFhBMlRiRlVKVTZCbjVGM1l0aXVReFo2YVZKb3RPU1phb1YKQVR3RWErUWhBb0dCQVBNK3pWQVU0RWduZWNPZmR0UTQ2NDJWeUJIWWxIV1VwWHd4SFk3UTFiREVsRDRIcngybApEMHVFWXJodkNvT0lIakg2RmhOdkZxME11bHlTajVTVVVZaWpadnIzNWg5WWhLaTE4bzJhMVV1YlErWkpGT1ZnCnFaUTgwM2RDVllXalkyeEMxeGhaUVIrQVVJYkY1N1BpQUNCbTFuRkJhUXRIN3NIL2hJNmxtbXV6QW9HQkFON2oKS3hzUXBjQkI0b25ld1F5dm5FOFVLY3gxU2lTMmpBUzlZVlBCSzBKRWc2ZVZEOVRiTUprUExlbm1hanF6ZHFIVApmY3E1TjJ2WENBZVBjMndqYlRTNEhxbWJqV09XRHA5SXVVK1RJanBCdlNSaDYyOEFJVndoYXlxQ1czY1l4V3RiCk9nS2ZNWmlWL2lXMFVwMHpoUjJJWWh4VDBlSnZYU200aHhVbXg4WjNBb0dBVW9YcDdkTkhTL05va2YrVnR1WWcKdEFZdXZDODRIclB4ZUxMSkRseTNRcU5PajhUWG1qMFhkVTFTbUxQRFkyQllyaWZrT1cra3g4emJwUEJzR2NJLwo3eFZRcUxCVnVDaTF5TzhCZlIwY1krd25Hd2VNT1UyVCtxQ3dOWE9oeEJic2Nod3pFU1dtdkdNeDdxZFJ0bXRrCkU1b1FBcGhvWk5WZ29SeHBBbVFZZ1pVQ2dZRUF1bmhaZnRvdG9hdzlSOVVwczJCVUtFQ1pPNm5BN3ZnZUtuVDYKTVNVQitQM3pHMGYxSjhKOVpRQXpER1d0NkJCdXByS1dvZnpVNWc3UGMrdkt4K1RYbjJ5T2twMUY2OVFGeGJNRQovaEw5WnJuSzhONVBKdDE0QzJrV0RFbGxGajJPSk9QOG8yYm1DbDhxY2dicnV3TDRVaDNnM3d3dEl3RENjMzRpCjNVcEZocjhDZ1lBNkhRYXdrZWprd29JL2x4cmk1MkwrLzduOTQ5UFFVdEVBNlpvaVo1VXpnK2hGeVpjK0dWZTcKQklQVzdpSldib2tkVEU1N21mL1l2RTFUZ3hhaVlzVjAxRklKNk1MUFo2eEcyMEpuaWMzSVpJL2VQbERNSnZFaAowUVFON0d4c3NBTUE1MWk3WTkrdVFBYklMSTBiTGpaOVBKT1RrUDdaODR5RGxWcDZsb1hXOVE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
- server.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCakNDQWU2Z0F3SUJBZ0lVSUxzd2FuZWRSOURFK1Zyczc5U3Q5UTUwTjVRd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZzFNbG9ZRHpJeQpPVFF3TmpFeU1EazBPRFV5V2pBbU1TUXdJZ1lEVlFRRERCdGhjWFZoTFd0MVltVXRaVzVtYjNKalpYSXVZWEYxCllTNXpkbU13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRFR5RSt3eEFxSFl5QjQKOWZBWXF5bVlwTWJ5Q3VOc1IxWTZ0Tk5BYnNWTTZOMjI0eVpnZWN3T1kvS0lsWDV2Y1VsZjNSQjhPNWNYakFPUgo3SzQwenJ6KzRBa1BRbkRyWmJhcGNTcDhzU1pSYk9HdVdOZ2laeGM1QmVmVFJhRnFoUWR2aDNjMExEeVRyQm8yCmwvRUFEY0JKcmZIaDZZUzBnbHorNC9ZOGljYnRqd0gzbVliNGZ4QXdIaWRqYm1aOEowdncxY3BRZm1mN1Q2NGUKN0hvRTRFK3JxcEhVOC9yVXFiQStHRzZMV3Q1aVVSZElPejRKQktpYVd4bVFvK0VLK1Q5aDcxd3pVVjY1c0dLbwpMdmV3bHVPd1Z3ajA2NTNUVnIxREpRVXd4RHovK2lUR0hPSVowOWhJNno4QjVNbzh0eHlSRFlESUJnRnRvUjNpCjFCbTBPWUkxQWdNQkFBR2pPVEEzTUFrR0ExVWRFd1FDTUFBd0N3WURWUjBQQkFRREFnWGdNQjBHQTFVZEpRUVcKTUJRR0NDc0dBUVVGQndNQ0JnZ3JCZ0VGQlFjREFUQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFKZFZSMXRGNApHb3dYUkhNbTFFUWRMS3BkcklXTUZVUFdIQllHamNJRXdVbzdWc0djZEEzMG5ldUx5Zk5wOFUzQjlSMDFTTzY3CnNWb0RURE5WMnk0U3dQTGFMRVBGMWptWVcrY3NGb09KZFlxMmN1WjVwWjJUdnRsV2hvTGtuSUt6YUh1Z29uS0cKWUhYbDRxS3MwR1I1bDNreVRhVGhwVkJQS05JNGhsL1RNeEVYQ1dxT0Y0RXJ6U3lYK3ltbTN5TzkwdUxtazlDNwoxU0t3YkV4SU41bnAzaGYwODhFZ0hBRTJKWkhzRHNnbkx5d0dMRlhtcldsQnVaSkpSZVk5Wkljb0VQK3dRUWRrClpack9oSnlKbGpVQnlTTE51cWxxNyswUnFvVGN1ZnE0MDhuUDJhNFdyU2VzcU5ud0MzVzQzNjA2RVVMbXdZZUgKWFRDVThTb0loeWVvUVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  # Please follow instruction in document to generate new SSL certs
+  server.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBMDhoUHNNUUtoMk1nZVBYd0dLc3BtS1RHOGdyamJFZFdPclRUUUc3RlRPamR0dU1tCllIbk1EbVB5aUpWK2IzRkpYOTBRZkR1WEY0d0RrZXl1Tk02OC91QUpEMEp3NjJXMnFYRXFmTEVtVVd6aHJsalkKSW1jWE9RWG4wMFdoYW9VSGI0ZDNOQ3c4azZ3YU5wZnhBQTNBU2EzeDRlbUV0SUpjL3VQMlBJbkc3WThCOTVtRworSDhRTUI0blkyNW1mQ2RMOE5YS1VINW4rMCt1SHV4NkJPQlBxNnFSMVBQNjFLbXdQaGh1aTFyZVlsRVhTRHMrCkNRU29tbHNaa0tQaEN2ay9ZZTljTTFGZXViQmlxQzczc0pianNGY0k5T3VkMDFhOVF5VUZNTVE4Ly9va3hoemkKR2RQWVNPcy9BZVRLUExjY2tRMkF5QVlCYmFFZDR0UVp0RG1DTlFJREFRQUJBb0lCQVFDbHZLVmcySXJFMlRhWQpjeCtxcm9pbkJJME03cWg4SEhmSENhd3BTSWJ2WVczaHFuSm1IZXNyZDl4ZU4xL3pKdDBkUUl1ZUxhUllzU0k2CkdOZGNURTVyeURoTzBOZzk0Q1BMQnQwUktER3NsMkVtYUREOCsyQ1pKNTM5SVFqcHE2SGVEazJqYnRzWlZoNU4KaXlyM3Q4czczZnpscHpKTGNab0ZmN0U4UHphR3dXOGw2Q2MyTzkxeUZsTEhwcHR5bzlzWngxVHoyTXZIZ0ZZdApDQmIxdHdkdjB3a2tFNXlwTXdKSU9tMzk0RkpZL2d4dytIdDRDR2IvcHhLVnVTRFZBWHl3T0J1VDZMUVJpSDFOCkcyU3J4THhRbjRPWnBhQ2RHL3NGUjZlVzlKbmVlUFhBMlRiRlVKVTZCbjVGM1l0aXVReFo2YVZKb3RPU1phb1YKQVR3RWErUWhBb0dCQVBNK3pWQVU0RWduZWNPZmR0UTQ2NDJWeUJIWWxIV1VwWHd4SFk3UTFiREVsRDRIcngybApEMHVFWXJodkNvT0lIakg2RmhOdkZxME11bHlTajVTVVVZaWpadnIzNWg5WWhLaTE4bzJhMVV1YlErWkpGT1ZnCnFaUTgwM2RDVllXalkyeEMxeGhaUVIrQVVJYkY1N1BpQUNCbTFuRkJhUXRIN3NIL2hJNmxtbXV6QW9HQkFON2oKS3hzUXBjQkI0b25ld1F5dm5FOFVLY3gxU2lTMmpBUzlZVlBCSzBKRWc2ZVZEOVRiTUprUExlbm1hanF6ZHFIVApmY3E1TjJ2WENBZVBjMndqYlRTNEhxbWJqV09XRHA5SXVVK1RJanBCdlNSaDYyOEFJVndoYXlxQ1czY1l4V3RiCk9nS2ZNWmlWL2lXMFVwMHpoUjJJWWh4VDBlSnZYU200aHhVbXg4WjNBb0dBVW9YcDdkTkhTL05va2YrVnR1WWcKdEFZdXZDODRIclB4ZUxMSkRseTNRcU5PajhUWG1qMFhkVTFTbUxQRFkyQllyaWZrT1cra3g4emJwUEJzR2NJLwo3eFZRcUxCVnVDaTF5TzhCZlIwY1krd25Hd2VNT1UyVCtxQ3dOWE9oeEJic2Nod3pFU1dtdkdNeDdxZFJ0bXRrCkU1b1FBcGhvWk5WZ29SeHBBbVFZZ1pVQ2dZRUF1bmhaZnRvdG9hdzlSOVVwczJCVUtFQ1pPNm5BN3ZnZUtuVDYKTVNVQitQM3pHMGYxSjhKOVpRQXpER1d0NkJCdXByS1dvZnpVNWc3UGMrdkt4K1RYbjJ5T2twMUY2OVFGeGJNRQovaEw5WnJuSzhONVBKdDE0QzJrV0RFbGxGajJPSk9QOG8yYm1DbDhxY2dicnV3TDRVaDNnM3d3dEl3RENjMzRpCjNVcEZocjhDZ1lBNkhRYXdrZWprd29JL2x4cmk1MkwrLzduOTQ5UFFVdEVBNlpvaVo1VXpnK2hGeVpjK0dWZTcKQklQVzdpSldib2tkVEU1N21mL1l2RTFUZ3hhaVlzVjAxRklKNk1MUFo2eEcyMEpuaWMzSVpJL2VQbERNSnZFaAowUVFON0d4c3NBTUE1MWk3WTkrdVFBYklMSTBiTGpaOVBKT1RrUDdaODR5RGxWcDZsb1hXOVE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+  server.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCakNDQWU2Z0F3SUJBZ0lVSUxzd2FuZWRSOURFK1Zyczc5U3Q5UTUwTjVRd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZzFNbG9ZRHpJeQpPVFF3TmpFeU1EazBPRFV5V2pBbU1TUXdJZ1lEVlFRRERCdGhjWFZoTFd0MVltVXRaVzVtYjNKalpYSXVZWEYxCllTNXpkbU13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRFR5RSt3eEFxSFl5QjQKOWZBWXF5bVlwTWJ5Q3VOc1IxWTZ0Tk5BYnNWTTZOMjI0eVpnZWN3T1kvS0lsWDV2Y1VsZjNSQjhPNWNYakFPUgo3SzQwenJ6KzRBa1BRbkRyWmJhcGNTcDhzU1pSYk9HdVdOZ2laeGM1QmVmVFJhRnFoUWR2aDNjMExEeVRyQm8yCmwvRUFEY0JKcmZIaDZZUzBnbHorNC9ZOGljYnRqd0gzbVliNGZ4QXdIaWRqYm1aOEowdncxY3BRZm1mN1Q2NGUKN0hvRTRFK3JxcEhVOC9yVXFiQStHRzZMV3Q1aVVSZElPejRKQktpYVd4bVFvK0VLK1Q5aDcxd3pVVjY1c0dLbwpMdmV3bHVPd1Z3ajA2NTNUVnIxREpRVXd4RHovK2lUR0hPSVowOWhJNno4QjVNbzh0eHlSRFlESUJnRnRvUjNpCjFCbTBPWUkxQWdNQkFBR2pPVEEzTUFrR0ExVWRFd1FDTUFBd0N3WURWUjBQQkFRREFnWGdNQjBHQTFVZEpRUVcKTUJRR0NDc0dBUVVGQndNQ0JnZ3JCZ0VGQlFjREFUQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFKZFZSMXRGNApHb3dYUkhNbTFFUWRMS3BkcklXTUZVUFdIQllHamNJRXdVbzdWc0djZEEzMG5ldUx5Zk5wOFUzQjlSMDFTTzY3CnNWb0RURE5WMnk0U3dQTGFMRVBGMWptWVcrY3NGb09KZFlxMmN1WjVwWjJUdnRsV2hvTGtuSUt6YUh1Z29uS0cKWUhYbDRxS3MwR1I1bDNreVRhVGhwVkJQS05JNGhsL1RNeEVYQ1dxT0Y0RXJ6U3lYK3ltbTN5TzkwdUxtazlDNwoxU0t3YkV4SU41bnAzaGYwODhFZ0hBRTJKWkhzRHNnbkx5d0dMRlhtcldsQnVaSkpSZVk5Wkljb0VQK3dRUWRrClpack9oSnlKbGpVQnlTTE51cWxxNyswUnFvVGN1ZnE0MDhuUDJhNFdyU2VzcU5ud0MzVzQzNjA2RVVMbXdZZUgKWFRDVThTb0loeWVvUVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
 kind: Secret
 metadata:
   annotations:
@@ -582,7 +566,7 @@ data:
   ## In the Enforcers screen, edit the KubeEnforcer to get the token from the default KubeEnforcer group configuration. - Base64 encoded ##
   token: "dG9rZW4ta2U="
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: kube-enforcer-admission-hook-config
@@ -602,8 +586,10 @@ webhooks:
         namespace: aqua
         name: aqua-kube-enforcer
     timeoutSeconds: 5
+    admissionReviewVersions: ["v1beta1"]
+    sideEffects: "None"
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: kube-enforcer-me-injection-hook-config
@@ -623,6 +609,8 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
     timeoutSeconds: 5
+    admissionReviewVersions: ["v1beta1"]
+    sideEffects: "None"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -702,7 +690,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.0
+          image: registry.aquasec.com/kube-enforcer:5.3
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -780,7 +768,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.0
+        image: registry.aquasec.com/enforcer:5.3
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
