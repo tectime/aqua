@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aqua-audit-db
+    deployedby: aqua-yaml
+  name: aqua-audit-db
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-audit-db
+  template:
+    metadata:
+      labels:
+        app: aqua-audit-db
+      name: aqua-audit-db
+      namespace: aqua
+    spec:
+      serviceAccount: aqua-sa
+      restartPolicy: Always
+      containers:
+      - name: aqua-audit-db
+        image: registry.aquasec.com/database:5.3
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-db-config
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        volumeMounts:
+        - mountPath: /var/lib/postgresql
+          name: postgres-audit-db
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+      volumes:
+      - name: postgres-audit-db
+        persistentVolumeClaim:
+          claimName: aqua-audit-db-pvc
